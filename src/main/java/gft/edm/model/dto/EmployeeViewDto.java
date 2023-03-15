@@ -1,10 +1,14 @@
 package gft.edm.model.dto;
 
 import gft.edm.model.Role;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Setter
+@Getter
 public class EmployeeViewDto {
 
     private UUID id;
