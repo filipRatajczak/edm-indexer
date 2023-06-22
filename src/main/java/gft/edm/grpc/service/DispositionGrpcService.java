@@ -22,7 +22,7 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
 
     @Override
     public void getDispositionsByEmployeeCode(GetDispositionsByEmployeeCodeRequest request, StreamObserver<Dispositions> responseObserver) {
-        List<DispositionDto> dispositionDtos = dispositionService.getDispositionByEmployeeCode(request.getEmployeeCode());
+        List<DispositionDto> dispositionDtos = dispositionService.getDispositionByEmployeeCode(request.getEmployeeCode(), parseStringToLocalDate(request.getStart()), parseStringToLocalDate(request.getStop()));
         responseObserver.onNext(dispositionsToGrpcFormat(dispositionDtos));
         responseObserver.onCompleted();
     }
@@ -36,7 +36,7 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
 
     @Override
     public void updateDisposition(UpdateDispositionRequest request, StreamObserver<Disposition> responseObserver) {
-        DispositionDto dispositionDto = dispositionService.updateDisposition(createDispositionFromGrpcFormat(request.getDisposition()));
+        DispositionDto dispositionDto = dispositionService.updateDisposition(request.getEmployeeCode(), createDispositionFromGrpcFormat(request.getDisposition()));
         responseObserver.onNext(dispositionToGrpcFormat(dispositionDto));
         responseObserver.onCompleted();
     }
@@ -80,6 +80,12 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
         dispositionDto.setStart(disposition.getStop());
         dispositionDto.setEmployeeCode(disposition.getEmployeeCode());
         return dispositionDto;
+    }
+
+    private java.time.LocalDate parseStringToLocalDate(String date) {
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        LocalDate localDate = timeFormatter.parseLocalDate(date);
+        return java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
     }
 
 }

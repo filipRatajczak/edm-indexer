@@ -1,5 +1,6 @@
 package gft.edm.grpc;
 
+
 import gft.edm.grpc.service.DispositionGrpcService;
 import gft.edm.grpc.service.EmployeeGrpcService;
 import gft.edm.grpc.service.TimeEntryGrpcService;
@@ -23,8 +24,9 @@ public class GrpcServer {
 
     @PostConstruct
     public void createGrpcServer() throws IOException {
+
         Server server = ServerBuilder
-                .forPort(8080)
+                .forPort(8136)
                 .addService(dispositionGrpcService)
                 .addService(timeEntryGrpcService)
                 .addService(employeeGrpcService)

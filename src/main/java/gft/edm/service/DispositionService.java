@@ -7,6 +7,7 @@ import gft.edm.validation.DispositionValidation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,8 +19,8 @@ public class DispositionService {
     private final DispositionRepository dispositionRepository;
     private final DispositionValidation dispositionValidation;
 
-    public List<DispositionDto> getDispositionByEmployeeCode(String employeeCode) {
-        return dispositionRepository.getAllByEmployeeCode(employeeCode).stream()
+    public List<DispositionDto> getDispositionByEmployeeCode(String employeeCode, LocalDate start, LocalDate stop) {
+        return dispositionRepository.getAllByEmployeeCode(employeeCode, start.toString(), stop.toString()).stream()
                 .map(Disposition::toDto)
                 .toList();
     }
@@ -30,9 +31,9 @@ public class DispositionService {
                 .toList();
     }
 
-    public DispositionDto updateDisposition(DispositionDto dispositionDto) {
+    public DispositionDto updateDisposition(String employeeCode, DispositionDto dispositionDto) {
         DispositionDto checkedDisposition = dispositionValidation.validateDisposition(dispositionDto);
-        return dispositionRepository.updateDisposition(checkedDisposition)
+        return dispositionRepository.updateDisposition(employeeCode, checkedDisposition)
                 .map(Disposition::toDto)
                 .orElseThrow(() -> new RuntimeException("Disposition with id: " + dispositionDto.getEmployeeCode() + " does not found"));
     }

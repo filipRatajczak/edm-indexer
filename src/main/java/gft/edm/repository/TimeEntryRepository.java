@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,8 +21,9 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, UUID> {
                     select te
                     from TimeEntry te
                     where te.employeeCode = ?1
+                    and te.start between ?2 and ?3
             """)
-    List<TimeEntry> getAllByEmployeeCode(String employeeCode);
+    List<TimeEntry> getAllByEmployeeCode(String employeeCode, LocalDate start, LocalDate stop);
 
     @Query(value = """
                     from TimeEntry te
@@ -34,9 +36,9 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, UUID> {
                     set te.day = :#{#timeEntryDto.day},
                         te.start = :#{#timeEntryDto.start},
                         te.stop = :#{#timeEntryDto.stop}
-                    where te.employeeCode = :#{#timeEntryDto.employeeCode}
+                    where te.employeeCode = :employeeCode
             """)
-    Optional<TimeEntry> updateDisposition(@Param("timeEntryDto") TimeEntryDto timeEntryDto);
+    Optional<TimeEntry> updateDisposition(@Param("employeeCode") String employeeCode, @Param("timeEntryDto") TimeEntryDto timeEntryDto);
 
     @Modifying
     void deleteById(UUID id);

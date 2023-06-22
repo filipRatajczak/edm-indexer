@@ -1,5 +1,6 @@
 package gft.edm.service;
 
+import gft.edm.exception.EmployeeNotFoundException;
 import gft.edm.model.Employee;
 import gft.edm.model.dto.EmployeeDto;
 import gft.edm.model.dto.EmployeeViewDto;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -21,17 +21,19 @@ public class EmployeeService {
     public List<EmployeeViewDto> getAllEmployees() {
         return employeeRepository.getAll().stream()
                 .map(Employee::mapToViewDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EmployeeViewDto getEmployeeByEmployeeCode(String employeeCode) {
-        return Employee.mapToViewDto(employeeRepository.getByEmployeeCode(employeeCode));
+        return employeeRepository.getByEmployeeCode(employeeCode)
+                .map(Employee::mapToViewDto)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with employeeCode: [" + employeeCode + "] does not found."));
     }
 
-    public EmployeeViewDto updateEmployee(EmployeeDto employeeDto) {
-        return employeeRepository.updateEmployee(employeeDto)
+    public EmployeeViewDto updateEmployee(String employeeCode, EmployeeDto employeeDto) {
+        return employeeRepository.updateEmployee(employeeCode, employeeDto)
                 .map(Employee::mapToViewDto)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with employeeCode: [" + employeeCode + "] does not found."));
     }
 
     public EmployeeViewDto createEmployee(EmployeeDto employeeDto) {

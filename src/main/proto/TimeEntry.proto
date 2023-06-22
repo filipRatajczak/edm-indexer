@@ -15,6 +15,8 @@ service TimeEntryService {
 
 message GetTimeEntryByEmployeeCodeRequest {
   string employeeCode = 1;
+  string start = 2;
+  string stop = 3;
 }
 
 message UpdateTimeEntryRequest {

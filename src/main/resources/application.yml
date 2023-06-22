@@ -1,4 +1,6 @@
 spring:
+  application:
+     name: edm-indexer
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
@@ -11,12 +13,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-grpc:
-  server:
-    port: 8126
-
-
 server:
   port: 8081
-

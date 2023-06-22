@@ -20,4 +20,10 @@ public class DispositionDto {
     private String stop;
     private String employeeCode;
 
+    public DispositionDto(LocalDate day, String start, String stop, String employeeCode) {
+        this.day = day;
+        this.start = start;
+        this.stop = stop;
+        this.employeeCode = employeeCode;
+    }
 }

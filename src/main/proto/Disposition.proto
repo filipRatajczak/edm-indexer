@@ -15,6 +15,8 @@ service DispositionService {
 
 message GetDispositionsByEmployeeCodeRequest {
   string employeeCode = 1;
+  string start = 2;
+  string stop = 3;
 }
 
 message DeleteDispositionsByIdRequest {
@@ -22,7 +24,8 @@ message DeleteDispositionsByIdRequest {
 }
 
 message UpdateDispositionRequest {
-  Disposition disposition = 1;
+  string employeeCode = 1;
+  Disposition disposition = 2;
 }
 
 message CreateDispositionRequest {

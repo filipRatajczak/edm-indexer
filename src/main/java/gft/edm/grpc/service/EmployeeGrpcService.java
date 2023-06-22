@@ -38,7 +38,7 @@ public class EmployeeGrpcService extends EmployeeServiceGrpc.EmployeeServiceImpl
 
     @Override
     public void updateEmployee(UpdateEmployeeRequest request, StreamObserver<Employee> responseObserver) {
-        EmployeeViewDto employeeViewDto = employeeService.updateEmployee(createEmployeeFromGrpcFormat(request.getEmployee()));
+        EmployeeViewDto employeeViewDto = employeeService.updateEmployee(request.getEmployeeCode(), createEmployeeFromGrpcFormat(request.getEmployee()));
         responseObserver.onNext(employeeViewToGrpcFormat(employeeViewDto));
         responseObserver.onCompleted();
     }

@@ -18,7 +18,8 @@ message GetEmployeeByEmployeeCodeRequest {
 }
 
 message UpdateEmployeeRequest {
-  Employee employee = 1;
+  string employeeCode = 1;
+  Employee employee = 2;
 }
 
 message CreateEmployeeRequest {

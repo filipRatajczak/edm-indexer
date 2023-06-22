@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,8 +20,9 @@ public interface DispositionRepository extends JpaRepository<Disposition, UUID> 
                     select d
                     from Disposition d
                     where d.employeeCode = ?1
+                    and d.start between ?2 and ?3
             """)
-    List<Disposition> getAllByEmployeeCode(String employeeCode);
+    List<Disposition> getAllByEmployeeCode(String employeeCode, String start, String stop);
 
     @Query(value = """
                     select d
@@ -34,9 +36,9 @@ public interface DispositionRepository extends JpaRepository<Disposition, UUID> 
                     set d.day = :#{#dispositionDto.day},
                         d.start = :#{#dispositionDto.start},
                         d.stop = :#{#dispositionDto.stop}
-                    where d.employeeCode = :#{#dispositionDto.employeeCode}
+                    where d.employeeCode = :employeeCode
             """)
-    Optional<Disposition> updateDisposition(@Param("dispositionDto") DispositionDto dispositionDto);
+    Optional<Disposition> updateDisposition(@Param("employeeCode") String employeeCode, @Param("dispositionDto") DispositionDto dispositionDto);
 
     @Modifying
     void deleteById(UUID id);

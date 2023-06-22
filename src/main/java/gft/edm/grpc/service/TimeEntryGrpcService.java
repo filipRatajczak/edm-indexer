@@ -22,7 +22,7 @@ public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceI
 
     @Override
     public void getTimeEntryByEmployeeCode(GetTimeEntryByEmployeeCodeRequest request, StreamObserver<TimeEntries> responseObserver) {
-        List<TimeEntryDto> timeEntryDtos = timeEntryService.getTimeEntriesByEmployeeCode(request.getEmployeeCode());
+        List<TimeEntryDto> timeEntryDtos = timeEntryService.getTimeEntriesByEmployeeCode(request.getEmployeeCode(), parseStringToLocalDate(request.getStart()), parseStringToLocalDate(request.getStop()));
         responseObserver.onNext(timeEntriesToGrpcFormat(timeEntryDtos));
         responseObserver.onCompleted();
     }
@@ -36,7 +36,7 @@ public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceI
 
     @Override
     public void updateTimeEntry(UpdateTimeEntryRequest request, StreamObserver<TimeEntry> responseObserver) {
-        TimeEntryDto timeEntryDto = timeEntryService.updateTimeEntry(createTimeEntryFromGrpcFormat(request.getTimeEntry()));
+        TimeEntryDto timeEntryDto = timeEntryService.updateTimeEntry(request.getEmployeeCode(), createTimeEntryFromGrpcFormat(request.getTimeEntry()));
         responseObserver.onNext(timeEntryToGrpcFormat(timeEntryDto));
         responseObserver.onCompleted();
     }
@@ -80,6 +80,12 @@ public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceI
         timeEntryDto.setStart(timeEntry.getStop());
         timeEntryDto.setEmployeeCode(timeEntry.getEmployeeCode());
         return timeEntryDto;
+    }
+
+    private java.time.LocalDate parseStringToLocalDate(String date) {
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        LocalDate localDate = timeFormatter.parseLocalDate(date);
+        return java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
     }
 
 }

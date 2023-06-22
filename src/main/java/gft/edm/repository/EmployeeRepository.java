@@ -28,7 +28,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
             from Employee e
             where e.employeeCode = ?1
     """)
-    Employee getByEmployeeCode(String employeeCode);
+    Optional<Employee> getByEmployeeCode(String employeeCode);
 
     @Modifying
     @Query(value = """
@@ -39,9 +39,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
                         e.address = :#{#employeeDto.address},
                         e.phoneNumber = :#{#employeeDto.phoneNumber},
                         e.email = :#{#employeeDto.email}
-                    where e.employeeCode = :#{#employeeDto.employeeCode}
+                    where e.employeeCode = :employeeCode
             """)
-    Optional<Employee> updateEmployee(@Param("employeeDto") EmployeeDto employeeDto);
+    Optional<Employee> updateEmployee(@Param("employeeCode") String employeeCode, @Param("employeeDto") EmployeeDto employeeDto);
 
     @Modifying
     void deleteById(UUID id);
