@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uz.edm.model.dto.DispositionDto;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -24,39 +24,35 @@ public class Disposition {
     private UUID id = UUID.randomUUID();
     @ManyToOne
     private Employee employee;
+    @ManyToOne
+    private Organization organization;
     private LocalDate day;
     private String start;
     private String stop;
-    private String employeeCode;
 
-    public static DispositionDto toDto(Disposition disposition) {
-        DispositionDto dto = new DispositionDto();
-        dto.setId(disposition.getId());
-        dto.setDay(disposition.getDay());
-        dto.setStart(disposition.getStart());
-        dto.setStop(disposition.getStop());
-        dto.setEmployeeCode(disposition.getEmployeeCode());
-        return dto;
-    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    public static Disposition toEntity(DispositionDto dispositionDto) {
-        Disposition disposition = new Disposition();
-        disposition.day = dispositionDto.getDay();
-        disposition.start = dispositionDto.getStart();
-        disposition.stop = dispositionDto.getStop();
-        disposition.employeeCode = dispositionDto.getEmployeeCode();
-        return disposition;
+        Disposition that = (Disposition) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(employee, that.employee)) return false;
+        if (!Objects.equals(organization, that.organization)) return false;
+        if (!Objects.equals(day, that.day)) return false;
+        if (!Objects.equals(start, that.start)) return false;
+        return Objects.equals(stop, that.stop);
     }
 
     @Override
-    public String toString() {
-        return "Disposition{" +
-                "id=" + id +
-                ", employee=" + employee +
-                ", day=" + day +
-                ", start='" + start + '\'' +
-                ", stop='" + stop + '\'' +
-                ", employeeCode='" + employeeCode + '\'' +
-                '}';
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (employee != null ? employee.hashCode() : 0);
+        result = 31 * result + (organization != null ? organization.hashCode() : 0);
+        result = 31 * result + (day != null ? day.hashCode() : 0);
+        result = 31 * result + (start != null ? start.hashCode() : 0);
+        result = 31 * result + (stop != null ? stop.hashCode() : 0);
+        return result;
     }
 }

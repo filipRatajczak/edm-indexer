@@ -1,6 +1,7 @@
 package uz.edm.grpc.service;
 
 import com.google.protobuf.Empty;
+import lombok.extern.slf4j.Slf4j;
 import uz.edm.grpc.disposition.CreateDispositionRequest;
 import uz.edm.grpc.disposition.DeleteDispositionsByIdRequest;
 import uz.edm.grpc.disposition.Disposition;
@@ -22,9 +23,11 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class DispositionGrpcService extends DispositionServiceGrpc.DispositionServiceImplBase {
 
@@ -39,7 +42,9 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
 
     @Override
     public void getDispositionsByEmployeeCode(GetDispositionsByEmployeeCodeRequest request, StreamObserver<Dispositions> responseObserver) {
-        List<DispositionDto> dispositionDtos = dispositionService.getDispositionByEmployeeCode(request.getEmployeeCode(), parseStringToLocalDate(request.getStart()), parseStringToLocalDate(request.getStop()));
+        List<DispositionDto> dispositionDtos = dispositionService
+                .getDispositionByEmployeeCode(request.getEmployeeCode(), parseStringToLocalDate(request.getStart()), parseStringToLocalDate(request.getStop()));
+
         responseObserver.onNext(dispositionsToGrpcFormat(dispositionDtos));
         responseObserver.onCompleted();
     }
@@ -87,7 +92,15 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
     }
 
     private Disposition dispositionToGrpcFormat(DispositionDto dispositionDto) {
+
+        String id = "";
+
+        if (Objects.nonNull(dispositionDto.getId())) {
+            id = dispositionDto.getId().toString();
+        }
+
         return Disposition.newBuilder()
+                .setId(id)
                 .setDay(dispositionDto.getDay().toString())
                 .setStart(dispositionDto.getStart())
                 .setStop(dispositionDto.getStop())
@@ -96,12 +109,12 @@ public class DispositionGrpcService extends DispositionServiceGrpc.DispositionSe
     }
 
     private DispositionDto createDispositionFromGrpcFormat(Disposition disposition) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(disposition.getDay());
         DispositionDto dispositionDto = new DispositionDto();
         dispositionDto.setDay(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         dispositionDto.setStart(disposition.getStart());
-        dispositionDto.setStart(disposition.getStop());
+        dispositionDto.setStop(disposition.getStop());
         dispositionDto.setEmployeeCode(disposition.getEmployeeCode());
         return dispositionDto;
     }

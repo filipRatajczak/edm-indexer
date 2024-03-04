@@ -19,14 +19,6 @@ public interface DispositionRepository extends JpaRepository<Disposition, UUID> 
     @Query(value = """
                     select d
                     from Disposition d
-                    where d.employeeCode = ?1
-                    and d.start between ?2 and ?3
-            """)
-    List<Disposition> getAllByEmployeeCode(String employeeCode, String start, String stop);
-
-    @Query(value = """
-                    select d
-                    from Disposition d
                     where d.day between ?1 and ?2
             """)
     List<Disposition> getAll(LocalDate from, LocalDate to);
@@ -34,7 +26,7 @@ public interface DispositionRepository extends JpaRepository<Disposition, UUID> 
     @Query(value = """
                     select d
                     from Disposition d
-                    where d.employeeCode = ?1
+                    where d.employee.employeeCode = ?1
                     and d.day between ?2 and ?3
             """)
     List<Disposition> getAllByEmployeeCodeInTimePeriod(String employeeCode, LocalDate start, LocalDate stop);
@@ -45,7 +37,7 @@ public interface DispositionRepository extends JpaRepository<Disposition, UUID> 
                     set d.day = :#{#dispositionDto.day},
                         d.start = :#{#dispositionDto.start},
                         d.stop = :#{#dispositionDto.stop}
-                    where d.employeeCode = :employeeCode
+                    where d.employee.employeeCode = :employeeCode
             """)
     Optional<Disposition> updateDisposition(@Param("employeeCode") String employeeCode, @Param("dispositionDto") DispositionDto dispositionDto);
 

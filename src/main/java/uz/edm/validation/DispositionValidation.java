@@ -1,5 +1,6 @@
 package uz.edm.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import uz.edm.model.dto.DispositionDto;
 import io.vavr.control.Try;
 import jakarta.validation.ValidationException;
@@ -14,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@Slf4j
 public class DispositionValidation {
 
     private DispositionDto dispositionDto;

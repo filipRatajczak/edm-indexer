@@ -38,7 +38,7 @@ public class EmployeeGrpcService extends EmployeeServiceGrpc.EmployeeServiceImpl
 
     @Override
     public void getEmployeeByEmployeeCode(GetEmployeeByEmployeeCodeRequest request, StreamObserver<Employee> responseObserver) {
-        EmployeeViewDto employeeViewDto = employeeService.getEmployeeByEmployeeCode(request.getEmployeeCode());
+        EmployeeViewDto employeeViewDto = employeeService.getEmployeeViewByEmployeeCode(request.getEmployeeCode());
         responseObserver.onNext(employeeViewToGrpcFormat(employeeViewDto));
         responseObserver.onCompleted();
     }
@@ -106,7 +106,7 @@ public class EmployeeGrpcService extends EmployeeServiceGrpc.EmployeeServiceImpl
     }
 
     private EmployeeDto createEmployeeFromGrpcFormat(Employee employee) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(employee.getBirthday());
         EmployeeDto employeeDto = new EmployeeDto();
         employeeDto.setFirstName(employee.getFirstName());
@@ -115,7 +115,7 @@ public class EmployeeGrpcService extends EmployeeServiceGrpc.EmployeeServiceImpl
         employeeDto.setBirthday(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         employeeDto.setEmail(employee.getEmail());
         employeeDto.setEmployeeCode(employee.getEmployeeCode());
-        employeeDto.setPhoneNumber(employeeDto.getPhoneNumber());
+        employeeDto.setPhoneNumber(employee.getPhoneNumber());
         employeeDto.setRole(Role.valueOf(employee.getRole()));
         employeeDto.setPassword(employee.getPassword());
         return employeeDto;

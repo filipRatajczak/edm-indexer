@@ -53,9 +53,9 @@ public class AuthorizationServerInterceptor implements ServerInterceptor {
 
             Claim claim = verify.getClaim(CLAIM_EXP);
 
-            boolean after = claim.asInstant().isBefore(Instant.now());
+            boolean isAfter = claim.asInstant().isBefore(Instant.now());
 
-            if (after) {
+            if (isAfter) {
                 status = Status.UNAUTHENTICATED.withDescription("Token expired.");
             } else {
                 log.info("Token ok. Can proceed the request.");
@@ -66,7 +66,6 @@ public class AuthorizationServerInterceptor implements ServerInterceptor {
 
         serverCall.close(status, metadata);
         return new ServerCall.Listener<>() {
-            // noop
         };
     }
 }

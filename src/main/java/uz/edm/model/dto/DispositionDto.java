@@ -19,22 +19,24 @@ public class DispositionDto {
     private String start;
     private String stop;
     private String employeeCode;
+    private String organizationCode;
 
-    public DispositionDto(LocalDate day, String start, String stop, String employeeCode) {
+    public DispositionDto(LocalDate day, String start, String stop, String employeeCode, String organizationCode) {
         this.day = day;
         this.start = start;
         this.stop = stop;
         this.employeeCode = employeeCode;
+        this.organizationCode = organizationCode;
     }
 
     @Override
     public String toString() {
         return "DispositionDto{" +
-                "id=" + id +
-                ", day=" + day +
+                "day=" + day +
                 ", start='" + start + '\'' +
                 ", stop='" + stop + '\'' +
                 ", employeeCode='" + employeeCode + '\'' +
+                ", organizationCode='" + organizationCode + '\'' +
                 '}';
     }
 }

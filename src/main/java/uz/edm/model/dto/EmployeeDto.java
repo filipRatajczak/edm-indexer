@@ -1,18 +1,19 @@
 package uz.edm.model.dto;
 
-import uz.edm.model.Role;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import uz.edm.model.Role;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class EmployeeDto {
 
     private UUID id;
@@ -25,8 +26,12 @@ public class EmployeeDto {
     private Role role;
     private String password;
     private String employeeCode;
+    private Set<String> organizationCodes;
+    private Set<String> ownedOrganizations;
 
-    public EmployeeDto(String firstName, String lastName, String address, String phoneNumber, String email, LocalDate birthday, Role role, String password, String employeeCode) {
+
+    public EmployeeDto(UUID id, String firstName, String lastName, String address, String phoneNumber, String email, LocalDate birthday, Role role, String password, String employeeCode, Set<String> organizationCodes, Set<String> ownedOrganizations) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -36,5 +41,7 @@ public class EmployeeDto {
         this.role = role;
         this.password = password;
         this.employeeCode = employeeCode;
+        this.organizationCodes = organizationCodes;
+        this.ownedOrganizations = ownedOrganizations;
     }
 }

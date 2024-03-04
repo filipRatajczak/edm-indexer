@@ -21,7 +21,7 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, UUID> {
                     select te
                     from TimeEntry te
                     where te.employeeCode = ?1
-                    and te.start between ?2 and ?3
+                    and te.day between ?2 and ?3
             """)
     List<TimeEntry> getAllByEmployeeCode(String employeeCode, LocalDate start, LocalDate stop);
 

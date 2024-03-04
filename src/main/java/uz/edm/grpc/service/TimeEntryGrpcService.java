@@ -1,6 +1,7 @@
 package uz.edm.grpc.service;
 
 import com.google.protobuf.Empty;
+import lombok.extern.slf4j.Slf4j;
 import uz.edm.grpc.timeentry.CreateTimeEntryRequest;
 import uz.edm.grpc.timeentry.DeleteTimeEntryRequest;
 import uz.edm.grpc.timeentry.GetTimeEntryByEmployeeCodeRequest;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceImplBase {
 
@@ -69,6 +71,7 @@ public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceI
     }
 
     private TimeEntry timeEntryToGrpcFormat(TimeEntryDto timeEntryDto) {
+        log.info(timeEntryDto.toString());
         return TimeEntry.newBuilder()
                 .setDay(timeEntryDto.getDay().toString())
                 .setStart(timeEntryDto.getStart())
@@ -78,18 +81,18 @@ public class TimeEntryGrpcService extends TimeEntryServiceGrpc.TimeEntryServiceI
     }
 
     private TimeEntryDto createTimeEntryFromGrpcFormat(TimeEntry timeEntry) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(timeEntry.getDay());
         TimeEntryDto timeEntryDto = new TimeEntryDto();
         timeEntryDto.setDay(java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth()));
         timeEntryDto.setStart(timeEntry.getStart());
-        timeEntryDto.setStart(timeEntry.getStop());
+        timeEntryDto.setStop(timeEntry.getStop());
         timeEntryDto.setEmployeeCode(timeEntry.getEmployeeCode());
         return timeEntryDto;
     }
 
     private java.time.LocalDate parseStringToLocalDate(String date) {
-        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MMM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         LocalDate localDate = timeFormatter.parseLocalDate(date);
         return java.time.LocalDate.of(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
     }

@@ -21,7 +21,7 @@ public class TimeEntryValidation {
     public TimeEntryDto validateTimeEntry(TimeEntryDto timeEntryDto) {
         this.timeEntryDto = timeEntryDto;
         return checkTimeEntryNonNull()
-                .checkTimeEntryDayNonNullAndNotEarlierThanNow()
+//                .checkTimeEntryDayNonNullAndNotEarlierThanNow()
                 .checkTimeEntryStartIsBeforeStop()
                 .getTimeEntryDto();
     }
